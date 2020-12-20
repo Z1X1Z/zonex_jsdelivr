@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Throne</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="main.css">
+	</head>
+	<body>
+Use number keys to adjust resolution!
+		<div id="container"></div>
+
+		<script id="vertexShader" type="x-shader/x-vertex">
+
+			varying vec2 vUv;
+        uniform vec2 resolution;
+			void main()	{
+
+				vUv = uv;
+				gl_Position = vec4( position, 1.0 );
+			}
+		</script>
+
+		<script id="fragmentShader" type="x-shader/x-fragment">
+
+			
+
+        uniform vec2 resolution;
+        uniform float time;
+
+        uniform sampler2D micIn; 
+
+			varying vec2 vUv;
+			
+float pi =3.1416;
+const int ITERATION =20;
+float rate = 000000.;
+float degrees2radians =5.72956;
+float golden_mean =1.618033;
+float b = pow(2.,2.);
+float speeed = 0.0141;
+bool frameByFrame = false;
+float frame = 0.;
+
+
+const float generalFace = 1.;
+const float lambFace = .4*generalFace,
+    oxFace = generalFace*3.,
+    manFace = generalFace*7.,
+    lionFace = generalFace*15.,
+    eagleFace = generalFace*7.,
+	swordBlade = generalFace*200.,
+    scrollVisibility =generalFace*15.,
+    lampLight =1.; 
+
+const float generalAura = 3.;
+const float 
+    centralCollectiveAura=1.;
+
+const float zoom =.2,
+    bubbleMitigator = 0.817, 
+	creaturesSpacing =4.*zoom,
+	creaturesSize = 1.*zoom;
+
+
+
+
+vec3 hsv2rgb (vec3 hsv) {
+  // from HSV to RGB color vector
+  hsv.yz = clamp (hsv.yz, 0.0, 1.0);
+  return hsv.z * (1.0 + 0.63 * hsv.y * (-cos (2.0 * 3.14159 * (hsv.x + vec3 (0.0, 2.0 / 3.0, 1.0 / 3.0))) - 1.0));
+}//^^^^^^above from https://shadertoy.fandom.com/wiki/Color_Processing^^^^^
+
+vec4 audioEq(in vec2 uv )//Shekina Glory
+{
+
+	
+    float angle = atan(uv.y,uv.x)/2./pi;
+	 if(angle<0.)angle = 1.+angle;
+	 angle +=8./12.;
+	 angle = mod(angle,1.);
+    float frAmp=0.;
+    for (float n = 0.; n<10.;n+=1.0)
+{float b =1.024/44.1*(1.-angle+n);
+        frAmp += texture2D(micIn, vec2(b ,0.)).r;
+        }
+
+    float d = length( uv)*1.;
+    float power = 7.;
+    float b = pow(d,power*1.)/pow(frAmp*2.,power);
+    if (b<37.)
+	//return vec4(frAmp);
+    return 3.* vec4(clamp(hsv2rgb(vec3(mod(angle+11./12.,1.),1.,.3))*b/16.,.0,1.),1.-b/8.);
+    else return vec4(.0);
+}
+
+
+
+vec4 starns(in vec2 uv,float note)//Seven stars, two witnesses
+{
+    float scalar = 15.;
+    float angle1 = (note+3.)/12.*2.*pi;//atan(uv.y,uv.x);
+	uv.x += -sin(angle1)*scalar;
+   uv.y += -cos(angle1)*scalar;
+   uv *=	26.5;
+
+        float angle = atan(uv.y,uv.x)+12./12.*pi*2.;//
+        	 if(angle<0.)angle = 2.*pi+angle;
+        angle += 2.*pi*note/12.;
+	angle /= 2.*pi;
+	 angle = mod(angle,1.);
+    float frAmp=0.;
+    float oct = floor(angle*10.);
+    float note0 = 1.-angle+oct+note/12.;
+    float note1  =1.024/44.1*(note0);
+    float noteAmp =16.* texture2D(micIn,
+    vec2(note1                  
+    ,0.)).r;
+            
+    float d = length( uv);
+    //fr=(fr)*(fr)/3.;
+    float power = 5.;
+    float b = pow(noteAmp,power)/pow(d,power*.5);
+    float rote = .0;
+
+       if(
+        note==12. ||
+                note==2. +rote ||
+                        note==5.  +rote||
+                        note== 7. +rote||
+                        note== 10. +rote)
+        return vec4(-b,-b,-b,1.);
+	else
+    	return vec4(b,b,b,1.);
+
+}
+
+
+vec3 scroll(vec2 p,	bool unleashed) {
+    vec2 s = p.yx;
+	p=p.yx;
+    float d = 0.0, l;
+    float flip;
+	if(rate!=0.) flip=-sin(3.14/2.+rate*((time*speeed+frame)));
+    else	     flip=-sin(1.0*((time*speeed+frame))+1.0)-1.15;
+	if (flip<0.) p = -p;
+	if (abs(p.x*p.x+p.y*p.y)<7.0||unleashed) for (int t = 0; t < ITERATION; t++) 
+    {
+        s = vec2(((s.x * s.x - s.y * s.y) +flip* p.x*p.x), (2.0* s.x * s.y + flip*p.y*p.y));
+        if(b==2. ||rate == 0.)
+        s.x = -1./s.x;
+        else
+            s.x = pow(s.x,flip)*sign(s.x*flip);
+        l = length(s);
+        d += l/40.;
+        if (l > 19.0 && t > -1)  
+            return vec3(1.);
+    }
+    return vec3(0.);
+}
+
+
+vec3 man(vec2 p,bool unleashed) {
+    vec2 s = p.yx;
+    p=p.yx;
+    float d = 0.0, l;
+    float flip=-sin(3.14*3./2.+rate*((time*speeed+frame)));
+    if (flip<0.) p = -p;
+    if (abs(p.x*p.x+p.y*p.y)<2.0||unleashed){for (int t = 0; t < ITERATION; t++) 
+    {
+        s = vec2(((s.x * s.x - s.y * s.y) +flip* p.x), (1.* s.x * s.y + flip*p.y));
+        if(b==2. ||rate == 0.) s.x = 1./s.x;
+        else s.x = 1./pow(s.x,flip)*sign(s.x*flip);
+        l = length(s);
+        d += l/25.;
+        if(t!=0 && l >20.0 ) return vec3((-sin(((time*speeed+frame))))+(-sin(((time*speeed+frame))+3.14/2.)))*sin(golden_mean*((time*speeed+frame)))/2.;
+    }
+    return vec3(-(-sin(((time*speeed+frame))))*2.+(-sin((time*speeed+frame)+3.14/2.)))*-sin((time*speeed+frame))/2.;
+    } return vec3(-0.);}
+vec3 eagle(vec2 p,	bool unleashed) {
+    vec2 s = p.yx;
+    p=p.yx;
+    float d = 0.0, l, flip=-sin(3.14*3./2.+rate*(time*speeed+frame)*40.)/abs(sin((time*speeed+frame)*40.)*2.+1.);
+    if (flip<0.) p = -p;
+    if(abs(6.67*p.x*p.x+p.y*p.y*2.)<700.0 ||unleashed)
+    for (int i = 0; i < ITERATION; i++)
+    {
+        s = vec2(-((sin((time*speeed+frame)*2.)+1.5)/2.*(s.x * s.x - s.y * s.y) +flip* p.x), (1.* s.x * s.y + flip*p.y));
+        if(b<=.5 ||rate == 0.) s.x = 1./s.x;
+        else s.x = 1./pow(s.x,flip)*sign(s.x*flip); 
+        s.y = s.x*s.y;
+        l = length(s);
+        d +=2.;
+        float nn = 0.0;
+        if (l >(20.0+nn) ) if( float(i)>3.&&float(i)>3.) return vec3(1.-sin(d * 0.003)-.5,1.- sin(d * 0.9)-.5,1.- sin(d * 0.1)-.5);
+    }
+    return vec3(.0);
+}
+
+vec3 lion(vec2 p,	bool unleashed) {
+    vec2 s = p.yx;
+    p=p.yx;
+    float d = 0.0, l, flip=-sin(3.14/2.+rate*(time*speeed+frame));
+    if (flip<0.) p = -p;
+    if(p.x*p.x*1.+p.y*p.y*2.<21.||unleashed)
+    for (int t = 0; t < ITERATION; t++) 
+    {
+        s = vec2(((s.x * s.x - s.y * s.y) +flip* p.x), (2.0* s.x * s.y + flip*p.y));
+        s/=2.0;
+        if(b==2. ||rate == 0.)
+            s.x = -1./s.x;
+        else
+            s.x = pow(s.x,flip)*sign(s.x*flip);
+        l = length(s);
+        d += l/40.;
+        if (l >14.0 && float(t)  >2.) 
+        return vec3(-sin(d +(time*speeed+frame*1.618)),-sin(d +(time*speeed+frame+100.))+
+        .2,-sin(d /10.*(time*speeed+frame)*2.)+.2);
+    }
+    return vec3(.0);
+}
+
+
+vec3 ox(vec2 p,	bool unleashed) {
+    vec2 s = p.yx;
+    p=p.yx;
+    float d = 0.0, l, flip=-sin(3.14/2.+rate*(time*speeed+frame));
+	if (flip<0.) p = -p;
+	if( (p.x+.25)*(p.x+.25)+p.y*p.y<1.15||(p.x>0.&& p.x*p.x+p.y*p.y<7. )||unleashed)
+    for (int t = 0; t < ITERATION; t++) 
+    {
+        s = vec2(((s.x * s.x - s.y * s.y) +flip* p.x), (3.0* s.x * s.y + flip*p.y));
+        if(b==2. ||rate == 0.) s.x = -1./s.x;
+        else s.x = pow(s.x,flip)*sign(s.x*flip);
+        l = length(s);
+        d += l/10.+l;
+        if (l >14.0 ) 
+            if (float(t)  >2.) 
+
+
+                return 
+                vec3(-sin(d +(time*speeed+frame)*1./golden_mean*2.)*.5+.5,
+                     -sin(d +(time*speeed+frame)*golden_mean*2.)*.5+.5,
+                     -sin(d +(time*speeed+frame)*2.)*.5+.5);
+    }
+    return vec3(.0);
+}
+
+
+vec3 lamb(vec2 p, bool helmed) {
+	p*=.75;
+  vec2 s = p.yx;
+	p=p.yx;
+    float speed = 1./(speeed+frame);
+		float  ll;
+	    float change = 8.+-sin(-(time*speeed+frame))*6.;
+  float d = 0.0, l;
+			float flip=-sin(3.14/2.+rate*(time*speeed+frame));
+	if (flip<0.) p = -p;
+		  float nn = (p.x*p.x+p.y*p.y);
+	vec3 coloration;
+  for (int t = 0; t < ITERATION; t++){
+    s = vec2(((s.x * s.x - s.y * s.y) +flip* p.x), (2.0* s.x * s.y + flip*p.y)); 
+	  if(b==2. ||rate == 0.)
+	  s.x = -1./s.x;
+	 else
+	  s.x = pow(s.x,flip)*sign(s.x*flip);
+ d +=-abs(s.x+s.y)+20.;
+ll = length(s);
+	 
+	  if (abs(s.x)+abs(s.y)  >17.) 
+	  {
+
+
+	  
+
+	  float colorshift = .5+-abs(sin(-(time*speeed+frame)/2.+3.14*.25))/2.;
+	  float colorshift1 = .5+-abs(sin(-(time*speeed+frame)/2.-3.14*.25))/2.;
+	  float colorshift2 = .5+-sin(-(time*speeed+frame)-3.14/3.);
+		  	    if (t != 1 || (p.x>-.1 || abs(p.y)<.3))
+	    if (t > 3)
+		     
+		    return 2.*colorshift2*colorshift2*vec3(.5+sin(float(t) * 0.05)-.5,.5-sin(float(t) * 0.2)-.5,sin(d * 0.01)-.5)
+		    
+		    +2.*colorshift1*colorshift1*vec3(10.)+
+		    		    -2.*colorshift*colorshift*vec3(10.)+
+		    2.*vec3(-sin(d+golden_mean +(time*speeed+frame)*1./golden_mean*.7),-sin(d*1. +(time*speeed+frame)*golden_mean*.7),-sin(d+1./golden_mean +(time*speeed+frame)*.7));
+	    
+                    else if( abs(p.y)>2.||( ( p.x>(.8+change/10.)||p.x<1.)) || rate != 0.0 )
+	    {
+    s = vec2(((p.x * p.x - p.y *p.y) +flip* p.x), (2.0* p.x * p.y + flip*p.y)); 
+		    	  l = 3.+length(s*golden_mean/3.5);
+		 return 
+
+		2.*vec3(1.-(sin(333.*golden_mean/l*-sin((time*speeed+frame)*1./golden_mean/5.)*-sin((time*speeed+frame)*-golden_mean/5.+1.57))-sin(1.1*1./golden_mean*-(time*speeed+frame)))/2.,
+		     1.- (sin(333./golden_mean*-l*(-sin((time*speeed+frame)*-golden_mean/5.+1.57)*-sin((time*speeed+frame)*golden_mean/5.+1.57/2.)*+2.))-sin(.1*(time*speeed+frame)*golden_mean))/2.
+		     ,1.-(sin(333.*l* -(sin((time*speeed+frame)*golden_mean/5.+1.57/2.)*-sin((time*speeed+frame)*1./golden_mean/5.)+2.))-sin(1.1* golden_mean*-(time*speeed+frame)))/2.
+		    )/2.;
+	    }
+	  
+	  else
+		  	return	 vec3((1.-.5*sin(p.x/2.)),(1.-.9*sin(p.x*1.)),(.1-.7*sin(p.x*2.)))/p.x/p.x/p.x*5.;
+		  }
+      
+}
+
+
+  return vec3(flip*((-sin((time*speeed+frame))-1.)/2.));
+}
+
+
+vec3 wings (vec2 p){
+	
+
+    vec3 destColor = vec3(.2);
+    float f = 0.0;
+	p*=5.;
+	vec2 reincrementation = vec2 (0.);
+	    for(float m = 0.0; m < 7.0; m++){
+    for(float i = 0.0; i < 6.0; i++){
+        float s = -sin(3.141/3.*i);
+        float c = -cos(3.141/3.*i);
+
+	    float val = pow((p.y+s+reincrementation.y)*(p.y+s+reincrementation.y)+(p.x+c+reincrementation.x)*(p.x+c+reincrementation.x),.5);
+	    if (val>1.&& val<1.04)
+        f = 2.*(val+(p.y*p.y+p.x*p.x-9.)/10.);
+    }
+		    reincrementation = vec2(-sin(3.141/3.*m),-cos(3.141/3.*m));
+}
+	return vec3(f*destColor);
+}
+	
+
+
+
+vec3 sword(vec2 p,	bool unleashed) {
+	p*=2.;
+	p.y/=3.;
+
+	p=p.yx;
+		  vec2 s = p.yx;
+	p.x+=50.*(-sin((10.*(time*speeed+frame
+			)*2.))+1.)/2.-6.;
+
+  float d = 0.0, l;
+if (p.x>-2.5 && abs(p.y*p.x) <1.77 &&abs(p.y)<2.11111111||unleashed)
+
+  for (int i = 0; i < 14; i++) {
+    s = vec2(1.5/(1.-pow((s.x * s.x - s.y * s.y +1.5+ p.x),2.)), -1.77/(2.0 * s.x * s.y + p.y));
+
+	  
+	  l = length(s);
+    d +=s.x+s.y+20.;
+	 
+    if (l >5.4 && ( i==4||( i==13 )))  return vec3(sin(d * 0.0061),sin(d * 0.0063),sin(d * 0.0069));
+  }
+  return vec3(0.);}
+vec2 FRACTALIZE(vec2 p) {
+    float time = time*speeed+frame;
+	p*=(-cos((time))+2.5)*5.;
+	float s = .5;
+	float cs = -cos((time)*5.618);
+	float sn = sin(-time);
+	mat2 rot = mat2(cs, sn, -sn, cs);
+	for (int i = 0; i < 8; i++) {
+		p = abs(p) / dot(p, p) - .5;
+		p *= rot;
+		s += .5-abs(sin(-(time)*sin((time))));
+	}
+	return p;
+}
+
+vec3 fiveEightsStarMandelbrot(vec2 p) {
+  vec2 s = p;
+  float d = 0.0, l;
+	
+  for (int i = 0; i < ITERATION; i++) {
+    s = vec2(s.x * s.x - s.y * s.y + p.x, 2.0 * s.x * s.y + p.y);
+	  s.y=-1./s.y;
+    l = length(s);
+    d +=20.;
+    if (l > 20.0) return vec3(1.-sin(d * 0.003)-.5,1.- sin(d * 0.9)-.5,1.- sin(d * 0.1)-.5)*.1;//return vec3(1., 1, 1.);
+  }
+	
+  return vec3(0.0);
+}
+
+
+
+vec3 lamp(vec2 p,bool unleash) {
+  vec2 s = p;
+	p.xy = -p.yx;
+
+  float d = 0.0, l;
+	if (!(p.x<-4.)&&abs(p.y)<1.789||unleash)
+  for (int i = 0; i < 5; i++) {
+    s = vec2(-1./(s.x * s.x - s.y * s.y + p.x),-1./( 2.0 * s.x * s.y + p.y));
+    l = length(s);
+   d +=s.x+s.y+20.;
+	 
+    if (l >7.)  return vec3(1.-sin(d * 0.001),1.- sin(d * 0.0015),1.- sin(d * 0.0069)); 
+  }
+	
+  return vec3(0.0);
+}
+
+
+vec3 crown(vec2 p){
+	p.x+=1.5;
+	p*=2.5;
+	vec2 s=p;
+	float l=0.;
+	float m=0.;
+	float k = 0.;
+	    if(p.x<0.){
+	if(abs((p.x+k)*(p.x+k)+(p.y*p.y)*2.5)<15.){
+		for (int f=0;f<20;f+=1)if(abs(s.x+s.y)>20.)l=1.;
+		else s=vec2(1./(s.x*s.x+s.y*s.y+p.x),-(2.0*s.x*s.y-p.y));
+		}	   
+	    //^^^^ halo hat of the golden eagle (good and evil, as a circle, which is only sort of an oval..)
+	s=p;
+	   // if (false)
+	     if(abs(p.y)<2.0)
+	for (int f=0;f<20;f+=1)if(abs(s.x+s.y)>20.) m=1.;
+	//else s=vec2(1./(s.x*s.x+s.y*s.y+p.x),1./(2.0*s.x*s.y-p.y));
+		else s=vec2(1./(s.x*s.x+s.y*s.y+p.x),1./(2.0*s.x*s.y+p.y)); //halo split in four
+	   //^^^^ the cross (
+}
+
+	
+return vec3(l+m,l+m,-l+m);}
+
+vec3 flames (vec2 p){
+    p.x = -p.x;
+    p*=1.5;
+    p.y*=3.;
+vec2 s=p;
+float l=0.;
+	    float m = 0.;
+	    float k = 0.;
+	    if(abs((p.x)*(p.x)+(p.y*p.y))<50.)
+for (int f=0;f<20;f+=1)if(abs(s.x+s.y)>20. && f>1)l=1.;
+	else{ s=vec2(-1./(s.x*s.x+s.y*s.y+p.x),-(2.0*s.x/s.y+p.y));
+		m += abs(s.x+s.y);
+	    }
+	
+return vec3(m*l, m*l/400.,-sin(m*1.618)*l);}
+
+vec4 body (vec2 p) {
+	p.x+=.5;
+	vec2 g=p*.5;
+	vec2 s=g;
+	float l=0.,n=1.;
+
+
+	    if(((p.x-1.)*(p.x-1.))+(p.y*p.y)<12.){
+	if (g.x>.5&&g.x<1.65&&abs(g.y*g.x)<.54)for(int f=0;f<13;f+=1)if(abs(s.x)+abs(s.y)>52.&&f>3)l=1.;
+		else{s=3.*vec2(-1./(s.x*s.x-s.y*s.y-g.x),77.*s.x*s.y-g.y);
+		     s.y=-1./s.y;}
+	g=p;
+	s=g;
+	for(int f=0;f<20;f+=1)if(abs(s.x)+abs(s.y)>52.&&f>4)l=1.;
+		else{s=2.*vec2(-1./(s.x*s.x-s.y*s.y-g.x),(2.0*s.x*s.y-g.y));
+		     s.x=sqrt(abs(s.x));}
+	g=p*2.;
+	s = g;    
+
+	for(int f=0;f<30;f+=1)if(abs(s.x)+abs(s.y)>17.&&f>3)l=1.;
+		else s=vec2(-1./(s.x*s.x-s.y*s.y-g.x),2.0*s.x*s.y-g.y);
+		g=p;
+	   g.x-=.5;
+		s=g;
+		for (int f=0;f<40;f+=1)
+		if(abs(s.x+s.y)>2. && f>1)n=0.;
+		else s=vec2(((s.x*s.x-s.y*s.y)-g.x),(2.0*s.x*s.y-g.y));
+ //vv musculature vv
+	g=p;
+	g.x+=.5;
+	g.y/=1.1;
+	s=g;
+if (g.x>1.0)for (int f=0;f<20;f+=1)if(abs(s.x+s.y)>11.&&f>8)l=1.; 
+	else {s=vec2(-1.5/((1.*s.x*s.x-2.*s.y*s.y)-g.x),(1.9*s.x*s.y-1.87*g.y ));s*=1.3; s.x=pow(abs(s.x),.57 ); }
+	//vv robe vv
+	float r = 0.;
+	g=p;
+	g.x+=.2;
+	g/=1.2;
+	s=g;
+	
+if (g.x>.5)for (int f=0;f<20;f+=1)if(abs(s.x+s.y)>11.&&f>7)r=.7*p.x; 
+	else {s=vec2(-2./((s.x*s.x-1.8*s.y*s.y)-g.x),(3.*s.x*s.y-1.3*g.y ));s*=1.11; s.x=pow(abs(s.x),.8 );}
+		    return vec4(l+n+r,2.*l-n+r,2.*l-n+r,1.);}
+		    return  vec4(0.);
+}
+
+
+
+vec4 chair (vec2 p) {
+    p/=3.;		
+	vec2 g = p;
+	g.x-=.30;
+	g*=.54;
+	vec2 s=g;
+	vec4 chair= vec4(0.);
+	float v=0.;
+	for (int t = 0; t < 9; t++)  {
+    		s = vec2(1./((s.x * s.x - s.y * s.y) - g.x), (2.0* s.x * s.y *g.y));
+		v += length(s)/15.;
+		if((t==3||t==6||t==8)&&length(s)>2.22 )   chair = vec4(v/4.);(-sin(v *.618+time*.618*1.),-sin(v*1.618 +time*1.618*1.),-sin(v +time*1.),1.);
+	}
+return clamp(chair,0.,1.);
+}
+
+void main( )
+{
+	frame = 0.;
+
+	float time_ = time*speeed+frame;
+	if (b == 2.0) rate = 0.;
+	
+  vec2 a = resolution.xy / min(resolution.x, resolution.y);
+
+  vec2 p = (vUv.xy - .5)*4. ;
+  p.y-=.25;
+				float flip=-sin(rate*time_+3.14);
+
+	
+	float variate = 1.;
+
+    bool starter = true, radar = false;
+        for(float rad = 0.; rad<7.; rad++) 
+    {
+	float angle = (atan(p.y,p.x)-atan(-sin((time+frame)*variate),
+                                     -cos((time+frame)*variate)));
+        if (angle <.1 && angle >-.1)
+        radar = true;
+        variate+=-(1.618*variate)*.5-sign(mod(variate,1.));
+    }
+	p/=1.1715;
+  float f = sin(time_ * 0.10 + 99.0) * 0.5 + 0.5;
+
+p/=zoom;
+		float vertshift =0.;
+	p.y-= vertshift;
+	float shift = 4.+creaturesSpacing;
+  float size = 5.4*creaturesSize;
+  float slide = 1.;
+  vec2 oxCoord = vec2(p.x-shift-slide,p.y-shift)*a/1.2*size;
+vec2 lionCoord = vec2(p.x+shift+slide,p.y+shift+vertshift)*a/1.2*size;
+	vec2 eagleCoord = vec2(p.x-shift-slide,p.y+shift +vertshift)*a/1.2*size;
+	vec2 manCoord = vec2(p.x+shift+slide,p.y-shift)*a/1.2*size;
+
+	p*=a;
+		float ratio = min(resolution.x, resolution.y)/max(resolution.x, resolution.y)*2.;
+	float wingScale = 4./ratio;
+
+
+	float pixelangle = atan(lionCoord.y,lionCoord.x)-sin(time_)/6.+3.14/8.;
+	float pixeldistance = pow((lionCoord.y*lionCoord.y+lionCoord.x*lionCoord.x),.5);
+	vec2 lionTiltCoord = -vec2(pixeldistance*ratio*2.*-cos(pixelangle),pixeldistance*ratio*2.*-sin(pixelangle));
+  vec3 wingss = wings(oxCoord/wingScale)+wings(lionCoord/wingScale)+wings(eagleCoord/wingScale)+wings(manCoord/wingScale);
+	vec3 swordDelimited = vec3(0.);
+	if (p.y <-.3/zoom)swordDelimited=1.*sword(vec2(p.x,-p.y),false);
+
+    vec3 zeroLamb = vec3(1.0);
+	
+vec3 zeroCenter =vec3(1.0);
+	float dist = length(p);
+		float distM = length(manCoord);
+		float distL = length(lionCoord);
+		float distO = length(oxCoord);
+		float distE = length(eagleCoord);
+if (dist<6.){
+    zeroLamb = vec3(dist/3.);
+		 if(dist<3. ){
+    zeroLamb = vec3(1.-dist/3.);
+	 zeroCenter = zeroLamb; 
+
+}
+
+}
+			else if(distM<3. )
+	 zeroCenter -= vec3(.7); 
+				
+	
+			else if(distL<3. )
+	 zeroCenter -= vec3(.7); 
+			else if(distO<3. )
+	 zeroCenter -= vec3(.7); 
+
+			else if(distE<3. )
+	 zeroCenter -= vec3(.7); 
+				
+    vec3 throne = 
+         lambFace*lamb(p,false)*2.+
+
+
+                        +ox(ratio*oxCoord/2.,false)*oxFace
+            +ox(ratio*oxCoord/2.,false)*oxFace
++lion(lionTiltCoord/2.,false)*lionFace
+            +eagle(ratio*4.115*eagleCoord, false)*eagleFace
+            +man(ratio*.5*manCoord,false)*manFace
+	+ wingss*5.;
+		   float temporalVar = (time*speeed+frame);
+    vec3	colorBuffer ,colorBufferOriginal ;
+            vec2 bbbb = p;
+
+ 	
+    
+				float timeBuffer = time;
+
+    vec4 creatureWings;
+    for (int m = 0; m<7; m++)
+        if( radar || m==0 ){
+
+	                float quasifractilator_gate =(-sin(temporalVar)*.1);
+
+        oxCoord = FRACTALIZE(oxCoord)-cos(-temporalVar)*quasifractilator_gate;
+        lionCoord = FRACTALIZE(lionCoord)-cos(temporalVar+1.)*quasifractilator_gate;
+        eagleCoord =FRACTALIZE(eagleCoord)-cos(-temporalVar+2.)*quasifractilator_gate;
+        manCoord = FRACTALIZE(manCoord)-cos(temporalVar+3.)*quasifractilator_gate;
+        creatureWings += 
+            vec4( //this is the individual creatures self/own distinct aura
+                ox(ratio*oxCoord,true)
+                +lion(lionCoord,true)
+                +man(ratio*2./2.0*manCoord,true)
+                +eagle(ratio*13./2.0*eagleCoord, true)
+            ,1.);
+      
+    timeBuffer*=timeBuffer;
+                }
+    
+
+    vec4 tol = audioEq(p/zoom/2.);
+    vec4 starn = vec4(0);
+    for (float x = 1.; x<13.;x++) 
+        starn+=starns(p.yx/zoom/2.,x);
+       vec3 lampBuffer = lamp(vec2(p.x,p.y+8.),false)*lampLight;
+    
+     vec4 filterable =  (chair(-p.yx)+vec4(throne,1.))/3. +creatureWings/2.;
+            if (filterable.r>1. )filterable.r = 1.;
+        if (filterable.g>1.)filterable.g = 1.;
+        if (filterable.b>1.)filterable.b = 1.;
+
+
+	vec2 g= .75*-p.yx;
+  vec2 s = g;
+
+vec4 lastLambStanding = vec4(.0);
+float l=0.;
+    if (g.x*g.x+g.y*g.y<17.)
+
+    for (int f=0;f<30;f+=1)if(abs(s.x)+abs(s.y)>17.&&f>2)l=1.;
+else s=vec2(-1./((s.x*s.x-s.y*s.y)-g.x),(2.0*s.x*s.y-g.y));
+		  lastLambStanding += vec4(l);
+
+p = -p.yx;
+		  filterable+=clamp(body(.75*.5*p),0.,1.);
+		  
+		  
+
+ gl_FragColor= tol
+    + clamp((    + vec4(scroll(vec2(p.x,p.y-8.),false)+
+      		clamp(clamp(filterable.xyz*(
+      		1.-clamp((lastLambStanding.xyz+swordDelimited+lampBuffer)*100.,0.,2.)),-1.,1.)
+      		,0.,1.)
+          + lastLambStanding.xyz +swordDelimited+lampBuffer+crown(p)+flames(vec2(p.x-1.,p.y))
+      ,1.))-vec4 ( tol.r+ tol.g+tol.b)/7.,0.,1.)+starn;
+      ;
+}
+
+		</script>
+<script src="./three.min.js"></script>
+		<script>
+
+
+
+			var container;
+			var camera, scene, renderer;
+
+var micTexture;
+var analyser;
+var source;
+var dataArray;
+startMic();
+
+var rez = window.devicePixelRatio;
+window.addEventListener('keydown', function(event) {
+var x = parseInt(String.fromCharCode(event.which || event.keyCode));
+if (x>0){rez = window.devicePixelRatio /x; renderer.setPixelRatio( rez);}
+else if (x==0){rez = window.devicePixelRatio /10.; renderer.setPixelRatio( rez);}
+else if (String.fromCharCode(event.which || event.keyCode)=="À")	
+	{rez=window.devicePixelRatio*2.;renderer.setPixelRatio( rez);}
+else if (String.fromCharCode(event.which || event.keyCode)=="=")		{	rez /=1.01; renderer.setPixelRatio(rez);}
+else if ( event.keyCode==173)		{console.log("!!!!");	rez =1.01; renderer.setPixelRatio(rez);}
+
+}, false);
+
+
+
+
+var uniforms;
+
+			function init() {
+
+				container = document.getElementById( 'container' );
+				camera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
+				scene = new THREE.Scene();
+				var geometry = new THREE.PlaneBufferGeometry( 2, 2 );
+
+
+
+uniforms = THREE.UniformsUtils.merge([
+    THREE.UniformsLib.lights, 
+  {
+					micIn : {  value: null }, // float array (vec3)
+        time: {value: 1.0 },
+        resolution: {value: new THREE.Vector2() }
+}
+  ]);
+      uniforms.resolution.value.x = window.innerWidth;
+      uniforms.resolution.value.y = window.innerHeight;
+				var material = new THREE.ShaderMaterial( {
+					uniforms: uniforms,
+					vertexShader: document.getElementById( 'vertexShader' ).textContent,
+					fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+				} );
+				var mesh = new THREE.Mesh( geometry, material );
+				scene.add( mesh );
+				renderer = new THREE.WebGLRenderer();
+
+
+
+
+				renderer.setPixelRatio( window.devicePixelRatio /4);
+
+				container.appendChild( renderer.domElement );
+				onWindowResize();
+				window.addEventListener( 'resize', onWindowResize, false );
+			animate();
+			}
+			function onWindowResize() {
+
+      uniforms.resolution.value.x = window.innerWidth;
+      uniforms.resolution.value.y = window.innerHeight;
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+			//
+			
+			
+
+
+
+			function animate( timestamp ) {
+
+
+				requestAnimationFrame( animate );
+				uniforms[ "time" ].value = timestamp / 1000;
+				renderer.render( scene, camera );
+if (micOn)analyser.getByteFrequencyData(  dataArray); 
+
+var dataArrayBuffer =new Uint8Array( bufferLength *3);
+for (var x = 0; x < bufferLength; x++) dataArrayBuffer [3*x]= dataArray[x];
+
+
+var micTexBuf = new THREE.DataTexture( dataArrayBuffer, bufferLength, 1, THREE.RGBFormat);
+
+uniforms[ "micIn" ].value = micTexBuf;
+
+    micTexBuf.needsUpdate = true;
+
+
+
+
+
+
+/*
+    var angle = Math.atan2(1.,1.)+2./12.*3.141*2.;
+	angle +=1.57;
+    var frAmp=0.;
+    for (var n = 0.; n<20.;n+=2.0)
+
+  frAmp += dataArrayBuffer[(1024./44100.*(Math.pow(2.,(((-angle+3.141*n)/12.-49.)/12.)*440.)))]/255.;
+    var d = 1;
+    var power = 7.;
+    var b = Math.pow(frAmp,power)/Math.pow(d,power*.7);
+    //if (b<37.)
+	console.log(frAmp);
+	*/
+	
+	
+
+
+			}
+ var audioX;
+var micOn = false;
+async function startMic() {
+  let stream = null;
+
+
+
+    stream = await navigator.mediaDevices.getUserMedia({audio: true}).then(
+
+ function (stream){
+ micOn = true;
+        var audioX = new AudioContext();
+      analyser = audioX.createAnalyser();
+      source = audioX.createMediaStreamSource( stream );
+      source.connect(analyser);
+      analyser.fftSize = 2048.;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array( bufferLength );
+      init();
+}
+
+
+);
+ 
+	
+}
+	</script>
+
+	</body>
+</html>
