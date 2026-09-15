@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Zone:X</title>
+  <title>Zone:X - Index</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta name="description" content="Zone:X">
+  <meta name="author" content="Xevin" >
+    
+      <link rel="stylesheet" href="styles.css">
+
+</head>
+<body class="textSHADOW">
+  <script src="OFFLINEonlineSwitch.js"></script>
+    <div class=onofflineBG id="background_wrap"></div>
+    <script>
+        nf = document.querySelectorAll('.onofflineBG');
+        if(window.online)nf[0].style = "background-image: url('https://cdn.jsdelivr.net/gh/Z1X1Z/zonex_jsdelivr/lionandlamb.png');"
+        else nf[0].style = "background-image: url('lionandlamb.png');"
+    </script>
+    <h2>
+    <div id="weeks" class="weeks"></div>
+    </h2>
+    <script>
+        //https://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
+        var now = new Date();
+        var start = new Date(now.getFullYear(), 0, 1);
+        var diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+        var oneDay = 1000 * 60 * 60 * 24;
+        let firstDayOfWeekOfTheYear = start.getDay();
+
+        var offset = 0.;//exhibit days from today
+        var day = Math.floor(diff / oneDay)+offset;
+        
+        
+        
+        console.log('Day of year: ' + day);
+        firstDayOfWeekOfTheYear
+        
+        let daysOfWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+        
+        let textOut = document.getElementById("weeks");
+        let WeekOfJubilees =Math.floor((day+firstDayOfWeekOfTheYear)/49)%7;
+  textOut.innerHTML +="Day of Jubilees: " + daysOfWeek[WeekOfJubilees] + "<br>Day of Weeks: " + daysOfWeek[(Math.floor((day+firstDayOfWeekOfTheYear)/7))%7] + "<br>Day of Week: " + daysOfWeek[(now.getDay()+offset+7*7*7*7)%7];//PRODuction offset should be 0 (was 1?)
+           
+
+        </script>
+<h1>
+
+        Welcome in The Name of the LORD.     <a href="stretchy.html">This is Manny,</a> short for Immanuel.  He appeared face (of God) first from the Mandelbrot fractal while I was developing this singing game.  This website comes with love from and for Jesus who came in the flesh and in the blood and in the spirit.  To play cleave with love to good and hate evil.  Please share this gem of a game paid for by Jesus Christ on the Cross with everyone in the spirit of the gospel: in truth and love and with much good cheer.
+            </div>
+
+                     <p>
+                      <input class="engage" type="checkbox" id="Full Screen"style="color:green" name="t"  onchange= "
+             
+                         if(document.getElementById('Full Screen').checked) 
+                         {
+                            localStorage.setItem('fullScreen','full screen')
+                            localStorage.setItem('rememberedFullScreen','do it again')
+                         }
+                        else 
+                    {localStorage.setItem('fullScreen','nope')
+                     localStorage.setItem('rememberedFullScreen','fuhgetaboudit')
+                     }
+">
+             <label for="Full Screen" style="color: rgb(255, 47, 238);">Maximize Screen!</label>
+
+            <p>
+            
+            <input class="engage" type="checkbox" id="Fast"style="color:green" name="t"  onchange= "
+             document.getElementById('Full').checked = false;
+            if(!document.getElementById('Fast').checked) document.getElementById('Fast').checked = true;
+             localStorage.setItem('Fast',String(document.getElementById('Fast').checked))
+
+">
+             <label for="Fast" style="color: greenyellow;">Fast!</label>
+
+
+
+            <input class="engage" type="checkbox" id="Full"style="color:green" name="t"  onchange= "
+             
+             document.getElementById('Fast').checked = false;
+                         if(!document.getElementById('Full').checked) document.getElementById('Full').checked = true;
+             localStorage.setItem('Fast',String(!document.getElementById('Full').checked))
+
+
+">
+             <label for="Full" style="color: greenyellow;">Full!</label>
+                <div style="color:rgba(0,0,0,0); text-shadow:none">.
+
+
+                    <br>
+
+  
+           
+            <script>
+                function setMaximize(){
+
+                if (localStorage.getItem('rememberedFullScreen')=='do it again') 
+                {
+                    document.getElementById('Full Screen').checked = true;
+                    localStorage.setItem('fullScreen','full screen')
+                }
+                else  
+                { localStorage.setItem('fullScreen','nope')
+                                    document.getElementById('Full Screen').checked = false;
+
+                               console.log( localStorage.getItem('fullScreen'))
+
+                }
+            }
+                            document.body.addEventListener('pointerdown',
+                             ()=>
+                            {
+                               setMaximize();
+                            }
+                        )
+                        setMaximize();
+
+             //   console.log(localStorage.getItem('Fast')==null)
+
+ if (localStorage.getItem('Fast')==String(true)) 
+ {
+ document.getElementById('Fast').checked = true;
+ document.getElementById('Full').checked = false;
+ }
+ else 
+ {
+
+ document.getElementById('Fast').checked = false;
+ document.getElementById('Full').checked = true;
+ }
+ 
+           if (localStorage.getItem('Fast')==null) 
+           {
+            localStorage.setItem('Fast',String(true))
+            document.getElementById('Fast').checked = true;
+            document.getElementById('Full').checked = false;
+           }
+
+                window.PageToLoad = ""
+                function loadStarshipWithHash(touchHash){
+                    touchHash=String(touchHash)
+                    var hashExtension="";
+                    if(document.getElementById("Fast").checked){
+                           window.PageToLoad = "brother.html"
+                    }
+                    else    window.PageToLoad = "manny.html"
+                    hashExtension+=touchHash
+                    var beginningBeforeFirstExtendedComma = ""
+
+                                  var namesOfConfigs = localStorage.getItem('buttonNames').split(',')
+
+                    for(var v = 0; v<namesOfConfigs.length;v++)if(namesOfConfigs[v]!='')
+                    {
+                        var lsNoC = localStorage.getItem(namesOfConfigs[v])
+                        if(lsNoC!='null')
+                        if(lsNoC[0]=="(")
+                    {
+                           var metaName = lsNoC.split(',')
+                            for(var v = 0; v<metaName.length;v++)metaName[v]=String(metaName[v])
+
+                           var postString = "";
+                    for(var v = 0; v<metaName.length;v++)if(metaName[v]!='')
+                    {
+                        metaCleaned = metaName[v]
+                        var breakOut = false;
+                        if(metaCleaned[0]=="(")metaCleaned=metaCleaned.slice(1,metaCleaned.length)
+                        for(var s = 0.; s<metaCleaned.length;s++)if(metaCleaned[s]==")")
+                    {   
+beginningBeforeFirstExtendedComma =metaCleaned.slice(s+1,metaCleaned.length);
+
+                                                metaCleaned=metaCleaned.slice(0,s);
+
+                        if(s>=metaCleaned.length-1)
+                    for(var z = v+1; z<metaName.length;z++)
+                {
+                    
+                   postString+="," + metaName[z];                   
+
+                                        breakOut=true;
+
+                }
+  breakOut=true;
+                        break;
+                    }
+                        var lsNoCMeta = localStorage.getItem(metaCleaned)
+                       // if(lsNoCMeta!='null')
+                                                hashExtension+=lsNoCMeta
+                                            if(breakOut)
+                                            {
+                                                hashExtension+=beginningBeforeFirstExtendedComma+postString;
+                                                break;
+                                            }
+
+                    }
+                }
+                        else
+
+                        hashExtension+=lsNoC
+
+                }
+                    //console.log(hashExtension)
+                    //window.location.hash =hashExtension;
+                    let hrefLocal = window.PageToLoad+"#"+hashExtension;
+                    if(hashExtension!="")window.location.href=hrefLocal;
+                  else window.location.href = window.PageToLoad;
+                   
+                  //  console.log(hrefLocal+" "+document.location.href)
+                }
+              function  loadWithBypass(touchHash){
+                  let ls = localStorage.getItem('config1')
+                if(document.getElementById('engage1').checked&&ls!=null)
+                touchHash+=String(ls);
+            ls = localStorage.getItem('config2')
+                if(document.getElementById('engage2').checked&&ls!=null)
+                touchHash+=String(ls);
+            ls = localStorage.getItem('config3')
+                if(document.getElementById('engage3').checked&&ls!=null)
+                touchHash+=String(ls);
+   ls = localStorage.getItem('config4')
+                if(document.getElementById('engage4').checked&&ls!=null)
+                touchHash+=String(ls);
+
+ loadStarshipWithHash(touchHash);
+}
+            </script>
+           
+            <div id="centered">
+                <a class="onoffline2" name="manny.html" onclick="
+                                 loadWithBypass('');
+">
+                    <figure>
+
+                <div style="outline-style: double;
+  outline-width: 10px;
+  padding: 0px; color:white;"  >
+                    <div style="outline-style:dashed;
+  outline-width: 10px;
+  padding: 15px; color:white;">
+                        <div style="font-size: 1em; line-height: .75em;">
+                                                        <div style="outline-style: dotted;  outline-width: 10px;">
+<br>
+                                <div style="transform: rotate(-126deg);color: rgb(255, 255, 0);">I</div><br>
+                                <div style="transform: rotate(-36deg);color: rgb(255, 0, 127.5);">A</div><br>
+                                <div style="transform: rotate(36deg);color: rgb(127.5, 0, 255);">U</div><br>
+                                <div style="transform: rotate(126deg);color: rgb(0, 255, 255);">E</div><br>
+                                <div style="font-size: 1.5em; line-height: 1.em;;color: grey;">!</div><br>
+                                <br>
+                                <div style="transform: rotate(-180deg);color: rgb(0, 255, 0);">oOoOoOo</div>
+                                </div>
+                                <br>
+                                </div>
+                                <div style = "outline-style:dashed;outline-width: 10px; ">
+                                    <img class="onoffline" src = "" name="game.png" style="
+    border: 1px solid white;
+    border-radius: 100%;
+    padding: 3px;
+    
+    " alt="{z<-z**3,z.real=log(abs(z.real))}"></img>
+                        </div>
+                    </div>
+                   <div style = "color: rgb(255, 0, 255);">^V^\|/^V^</div>
+                    <div style="color:lightgray;">Sonic<br>Starship
+</div>
+                </div>
+                        <figcaption>
+                    </a>
+                </figcaption>
+                </figure>
+            </div>
+            <p>
+            </h1>
+
+<h1>
+   <li> <a class="onoffline2" value="" onclick="
+                                 loadWithBypass('.J.sp')" name="manny.html"> Touch with star</a></li>
+   <li> <a class="onoffline2"  name="manny.html" onclick=
+"
+
+                                 loadWithBypass('t')"
+      >Touch Only</a></li>
+   </h1>
+<h2>
+
+<p>
+    <input class="configuration" type="text" id = "configuration1" onkeyup="       
+    var valueToSet = String(this.value);
+   // if(valueToSet!='null')
+     localStorage.setItem('config1',valueToSet );
+"
+></input>
+
+    <input class="engage" type="checkbox" id="engage1"style="color:green" name="t"  onclick= "
+        localStorage.setItem('engage1', this.checked.toString());
+">
+     <label for="engage1">engage1</label><p>
+
+
+          <input class="configuration" type="text" id = "configuration2" onkeyup="  
+           var valueToSet = String(this.value);
+  //  if(valueToSet!='null')
+     localStorage.setItem('config2',valueToSet );
+"
+></input>
+
+    <input class="engage"  type="checkbox" id="engage2"style="color:green" name="t"  onclick= "
+        localStorage.setItem('engage2', this.checked.toString());
+">
+     <label  for="engage2">engage2</label><p>
+
+
+          <input class="configuration" type="text" id = "configuration3" onkeyup="        
+           var valueToSet = String(this.value);
+   // if(valueToSet!='null')
+     localStorage.setItem('config3',valueToSet );
+"
+></input>
+
+    <input class="engage" type="checkbox" id="engage3"style="color:green" name="t"  onclick= "
+        localStorage.setItem('engage3', this.checked.toString());
+">
+     <label  for="engage3">engage3</label><p>
+
+
+          <input class="configuration"   type="text" id = "configuration4" onkeyup="      
+           var valueToSet = String(this.value);
+  //  if(valueToSet!='null')
+     localStorage.setItem('config4',valueToSet );
+"
+></input>
+
+    <input class="engage" type="checkbox" id="engage4"style="color:green" name="t"  onclick= "
+        localStorage.setItem('engage4', this.checked.toString());
+">
+     <label for="engage4">engage4</label><p>
+     </h2>
+    <script>
+        let hkConfig = localStorage.getItem('config1');
+        if(String(hkConfig)=="null")hkConfig=""
+        document.getElementById('configuration1').value= String(hkConfig);
+        hkConfig = localStorage.getItem('config2');
+                if(String(hkConfig)=="null")hkConfig=""
+
+        document.getElementById('configuration2').value= String(hkConfig);
+        hkConfig = localStorage.getItem('config3');
+                if(String(hkConfig)=="null")hkConfig=""
+
+        document.getElementById('configuration3').value= String(hkConfig);
+        hkConfig = localStorage.getItem('config4');
+                if(String(hkConfig)=="null")hkConfig=""
+
+        document.getElementById('configuration4').value= String(hkConfig);
+       // hashExtension=hkConfig;
+          if( localStorage.getItem('engage1')=="true")
+             document.getElementById("engage1").checked = true
+             else document.getElementById("engage1").checked = false
+            
+             if( localStorage.getItem('engage2')=="true")
+             document.getElementById("engage2").checked = true
+             else document.getElementById("engage2").checked = false
+
+             if( localStorage.getItem('engage3')=="true")
+             document.getElementById("engage3").checked = true
+             else document.getElementById("engage3").checked = false
+
+             if( localStorage.getItem('engage4')=="true")
+             document.getElementById("engage4").checked = true
+             else document.getElementById("engage4").checked = false
+                                </script>
+
+<p>
+<script>
+        //    localStorage.removeItem('configNames')
+          //  localStorage.removeItem('buttonNames')
+
+        var menuEntryNames = localStorage.getItem('configNames');
+        if (menuEntryNames==null||menuEntryNames=="")
+        {localStorage.setItem('configNames',
+        'Fibgetti Spinner,EyesSentOut,SevenSeals,Original,Standard,meta'
+    );
+        localStorage.setItem('Fibgetti Spinner','.G(3,54,1,1,2)')
+
+localStorage.setItem('EyesSentOut',',J,J.a,Ua(0),p,p,.i.h.h.h,r/(1.5)')
+localStorage.setItem('SevenSeals','.4.4sup??&&qqqqqqqRk.,f')
+localStorage.setItem('Original','F.onT.mqqqqqqK&&,.o.,P,.G,.O,W,.N,.N,.G')
+localStorage.setItem('Standard',',N,.O,W')
+localStorage.setItem('meta','(EyesSentOut,SevenSeals),ra(16),.r/(20)')
+        }
+         var bn = localStorage.getItem('buttonNames');
+         if(bn==null)localStorage.setItem('buttonNames','')
+//localStorage.setItem('nameStored','')
+
+
+
+</script>
+
+      <h2>  Name:       <select name="configDropDown"  id="configurations" style="font-size:24px; width:75%;"
+                  onchange="
+                                var cn =   String(document.getElementById('configurations').options[document.getElementById('configurations').selectedIndex].text);
+
+                 if(cn!='New Entry')
+                  {
+
+document.getElementById('nameOfConfig').value =String(cn);
+window.lastConfigName = cn;
+                    
+   document.getElementById('configurer').value =  String(localStorage.getItem(cn))
+//   console.log(localStorage.getItem(cn))
+   //                 window.lastConfigName = this.value;
+                  }
+                  else {
+
+ // var opt = document.createElement('option');
+ // opt.value = -3;
+  
+     document.getElementById('configurer').value =  ''
+var opt = new Option('', 1000000, false, true)
+var opt2 = new Option('', 1000000, false, false)
+
+    document.getElementById('configurations').add(opt);
+    document.getElementById('selectConfigs').add(opt2);
+    
+  //  document.getElementById('configurations').selectedIndex=-2
+ 
+
+document.getElementById('nameOfConfig').value ='';
+//window.lastConfigName = '';
+
+   document.getElementById('configurer').value =  ''
+                       window.lastConfigName =  String(this.value);
+
+}
+
+
+"
+
+            >
+                            <option >New Entry</option>
+                                                        <option ></option>
+
+                            <option id = "blankSelection" value="1000000" selected="selected"></option>
+
+                            </select>
+
+                            <script>
+ document.getElementById('blankSelection').selected="selected"
+
+
+ function setName(val)
+ {
+    val=String(val);
+       var lastName = '';
+        while (lastName!=val)
+        {
+                   lastName = String(document.getElementById('nameOfConfig').value)
+                   document.getElementById('nameOfConfig').value = val.replace(',' , '')
+        }
+        
+        var reset=localStorage.getItem('nameStored');
+        if(!("lastConfigName" in window)&&window.lastConfigName!=""&&document.getElementById('nameOfConfig').value!="")
+        {window.lastConfigName=reset;
+        }
+
+        var namesOfConfigs = localStorage.getItem('configNames')
+                              var newName = true;
+             if(namesOfConfigs!=null)
+              {
+            namesOfConfigs=namesOfConfigs.split(',');
+              for(var index = 0; index<namesOfConfigs.length; index++)
+              {
+              if(window.lastConfigName == namesOfConfigs[index]){
+                    namesOfConfigs.splice(index, 1)
+                    localStorage.removeItem(window.lastConfigName)
+                    if(document.getElementById('configurer')!=null)
+                        localStorage.setItem(val, String(document.getElementById('configurer').value));
+                    if(val!=null&&val!='')  namesOfConfigs.push(val)
+                    localStorage.setItem('configNames', namesOfConfigs.join());
+
+                    newName=false
+                        break;
+                    }
+            }
+        }
+
+                  namesOfConfigs = localStorage.getItem('buttonNames')
+            if(namesOfConfigs!=null)
+              {
+            namesOfConfigs=namesOfConfigs.split(',');
+            var index = 0;
+            var indexLength = namesOfConfigs.length
+            while (index<indexLength)
+              {
+                
+              if(window.lastConfigName == namesOfConfigs[index]){
+
+                    namesOfConfigs.splice(index, 1)
+                    if(val!=null&&val!=''&&window.lastConfigName!='')  namesOfConfigs.push(val)
+                   localStorage.setItem('buttonNames', namesOfConfigs.join());
+indexLength--
+index--
+                    
+            }
+index++
+  document.getElementById('selectionButtons').innerHTML=' ';
+            var buttonNames = localStorage.getItem('buttonNames').split(',')
+
+for(var m = 0; m<buttonNames.length;m++)
+    makeButton(buttonNames[m])
+
+        }
+
+              if(newName)  
+              {
+                var namesBuffer = localStorage.getItem('configNames');
+              localStorage.setItem('configNames', namesBuffer+','+val);
+              }
+              
+            }
+
+   document.getElementById('configurations').options[document.getElementById('configurations').selectedIndex].text = String(val);
+   document.getElementById('selectConfigs').options[document.getElementById('configurations').selectedIndex-1].text = String(val);
+
+                    window.lastConfigName = val;
+                                       localStorage.setItem('nameStored',val);
+ }
+
+                             </script>
+        <input class="configuration" type="text" id = "nameOfConfig" style = "width:100%;"
+        onchange="  
+     setName(String(this.value))
+
+        "
+        onkeyup="setName(String(this.value))"
+
+></input>
+    
+<script>
+    if(document.getElementById('nameOfConfig').value=="")localStorage.setItem('nameStored',"");
+
+        
+    </script>
+Combo: 
+        <input class="configuration" type="text" id = "configurer" style = "width:100%;" onchange="               
+
+var valToSet =  String(document.getElementById('configurer').value);
+if(valToSet!='null')
+localStorage.setItem(window.lastConfigName, valToSet);
+
+              
+"
+onkeyup="               
+
+var valToSet =  String(document.getElementById('configurer').value);
+if(valToSet!='null')
+localStorage.setItem(window.lastConfigName, valToSet);
+"
+></input>
+<br>
+<script>  
+function makeButton (buttonText)
+{
+    buttonText=String(buttonText)
+                if(buttonText!='')
+                {
+                  var buttons= document.getElementById('selectionButtons')
+                   var button = document.createElement('button')
+                   button.style.fontSize='.75em'
+    button.addEventListener('click', function() {
+              var namesOfConfigs = localStorage.getItem('buttonNames').split(',')
+
+              for(var index = 0; index<namesOfConfigs.length; index++)
+              {
+              if(this.innerHTML == String(namesOfConfigs[index]))
+              {
+                    namesOfConfigs.splice(index, 1)
+                   localStorage.setItem('buttonNames',String(namesOfConfigs))
+
+                break;
+              }
+            }
+
+        this.remove();
+    
+    });
+                button.innerHTML = buttonText;
+
+                   buttons.append(button)
+}
+
+}
+
+
+
+
+</script>
+ <select name="configDropDown"  id="selectConfigs" style="font-size: 24px; width:75%;"
+                  onchange="
+                var buttonText = String(document.getElementById('selectConfigs').options[document.getElementById('selectConfigs').selectedIndex].text);
+                                                 localStorage.setItem('buttonNames',buttonText+','+localStorage.getItem('buttonNames'))
+
+makeButton (buttonText)
+
+                  "
+            >
+
+                            <option value="1000000" selected="selected"></option>
+                                                                    <option ></option>
+
+            </select>
+
+<div id="selectionButtons">
+    
+</div>
+
+<script>
+        var buttonNames = localStorage.getItem('buttonNames').split(',');
+for(var m = 0; m<buttonNames.length;m++)
+    makeButton(String(buttonNames[m]))
+
+   // document.getElementById('configurations').options[document.getElementById('configurations').selectedIndex].text = "Bowser"
+</script>
+
+
+
+
+<script>
+    
+    var menuEntryNames = localStorage.getItem('configNames').split(',');
+    for(var m = 0; m<menuEntryNames.length; m++)if(menuEntryNames[m]=='')
+    {menuEntryNames.splice(m, 1)
+                            localStorage.setItem('configNames', menuEntryNames.join());
+    }
+     menuEntryNames = localStorage.getItem('configNames').split(',');
+
+    for (var entryIndex = 0; entryIndex<menuEntryNames.length; entryIndex++)
+{
+  var opt = document.createElement("option");
+  opt.value = String(entryIndex);
+  opt.text=String(menuEntryNames[entryIndex]);
+    document.getElementById('configurations').add(opt);
+
+    
+
+
+  var opt2 = document.createElement("option");
+  opt2.value = String(entryIndex);
+  opt2.text=String(menuEntryNames[entryIndex]);
+    document.getElementById('selectConfigs').add(opt2);
+
+
+}
+
+
+</script>
+
+
+<h2> May not work on all platforms indicated by a white or mostly black screen once loaded.  If so: try a different browser like Firefox or Opera.  For starship that should work, try one that's
+ <a class="onoffline2"  name="manny.html" onclick=
+"
+                  window.location.href = 'manny.html#YO2~';
+                  "
+    >barebones</a>.
+    <p> <a href="keys.html">Hotkeys</a></p>
+
+    
+</p>
+For a musicXML score file to upload you can visit <a href = "https://hymnary.org/browse/popular/tunes"> hymnary.org</a> there are some pretty impressive features @ the <a href="https://hymnary.org/explore">explore page</a> on that site.
+
+</li>
+
+<p>
+<li>He is a seven eyed\seven horned living Lamb as has been slain!
+<a href="https://biblehub.com/niv/revelation/5.htm"><p></p>The Revelation of John, Chapter 5:6-10, The Holy Bible</a>:
+<p><i>Then I saw a Lamb, looking as if it had been slain, standing at the center of the throne, encircled by the four living creatures and the elders. The Lamb had seven horns and seven eyes, which are the seven spirits of God sent out into all the earth. He went and took the scroll from the right hand of him who sat on the throne. And when he had taken it, the four living creatures and the twenty-four elders fell down before the Lamb. Each one had a harp and they were holding golden bowls full of incense, which are the prayers of God’s people. And they sang a new song, saying:
+<p/>
+<div style="text-align: center;">
+<p></p><b>
+“You are worthy to take the scroll<p></p>
+
+
+and to open its seals,<p></p>
+
+
+because you were slain,<p></p>
+
+
+and with your blood you purchased for God<p></p>
+
+
+persons from every tribe and language and people and nation.<p></p>
+
+
+You have made them to be a kingdom and priests to serve our God,<p></p>
+
+
+and they will reign on the earth.”<p></p></i></b>
+    </h2>
+</div>
+<h1>
+    <div id="centered">
+        
+        <ul>
+            <!--
+            <a href="throne.html"><figure>
+            <img class="onoffline" src = "" name="3.png"
+            alt="lamb">
+            <figcaption>Throne</figcaption></a>
+            </figure>
+            -->
+            <a href="fourcreatures.html"><figure>
+                <img class="onoffline" src = "" name="fourcreatures.png"
+                    alt="lamb">
+                <figcaption>Four Creatures</figcaption></a>
+            </figure>
+        </ul>
+        <ul>
+            <a href="inhisimage.html"><figure>
+                <img class="onoffline" src = "" name="4.png"
+                    alt="lamb">
+                <figcaption>In His Image</figcaption></a>
+            </figure>
+            <a href="breathing.html"><figure>
+                <img class="onoffline" src = "" name="breathing.png"
+                    alt="lamb">
+                <figcaption>Breathing</figcaption></a>
+            </figure>
+        </ul>
+        <ul>
+            <a href="lamb.html"><figure>
+                <img class="onoffline" src = "" name="5.png"
+                    alt="lamb">
+                <figcaption>Static</figcaption></a>
+            </figure>
+            <a href="shiny.html"><figure>
+                <img class="onoffline" src = "" name="shiny.png"
+                    alt="lamb">
+                <figcaption>Shiny</figcaption></a>
+            </figure>
+            <a href="oi.html">
+                <figure>
+                    <img class="onoffline" src = "" name="6.png"
+                        alt="lamb">
+                    <figcaption>Interactive</figcaption></a>
+            </figure>
+            <a href="oio.html">
+                <figure>
+                    <img class="onoffline" src = "" name="supercharge.png"
+                        alt="lamb">
+                    <figcaption>SuperCharge</figcaption></a>
+            </figure>
+        </ul>
+        <ul>
+            <a href="144.html">
+                <figure>
+                    <img class="onoffline" src = "" name="144.png"
+                        alt="aRe">
+                    <figcaption>First Fruits</figcaption></a>
+            </figure>
+            
+            <a href="441.html">
+                <figure>
+                    <img class="onoffline" src = "" name="441.png"
+                        alt="aRe">
+                    <figcaption>First Fruits</figcaption></a>
+            </figure>
+            
+        </ul>
+        <ul>
+            
+            <a href="heart.html">
+                <figure>
+                    <img class="onoffline" src = "" name="heart.png"
+                        alt="heart">
+                    <figcaption>Mandelbrot</figcaption></a>
+            </figure>
+            
+            <a href="tol.html">
+                <figure>
+                    <img class="onoffline" src = "" name="clover.png"
+                        alt="tol">
+                    <figcaption>Clovers</figcaption></a>
+            </figure>
+        </ul>
+        
+        <ul>
+            
+            <a href="bride.html">
+                <figure>
+                    <img class="onoffline" src = "" name="Bride.png"
+                        alt="New Jerusalem">
+                    <figcaption>Bride</figcaption></a>
+            </figure>
+            
+            <a href="hephzibah.html">
+                <figure>
+                    <img class="onoffline" src = "" name="hephzibah.png"
+                        alt="New Jerusalem">
+                    <figcaption>Family</figcaption></a>
+            </figure>
+            
+        </ul>
+        </figure>
+        <!-- <ul>
+        <a class="onoffline2" href = "" name="thronewitheq.html">Buggy</a>
+        </ul> -->
+        
+        </li>
+        </div id="centered">
+        
+        <p><a href="a_true_tale.html">An Epiphany</a></p>
+        <p><a href="prophecyandtime.html">Prophecy and Times</a></p>
+        <p><a href="entireLineRhyme.html">Poem</a></p>
+        <p><a href="zero.html">Manny is not nothing; 1=0*0</a></p>
+        <p><a href="scriptures.html">Some scriptures</a></p>
+        <p><a href="doubles.html">Resolving the Paradox</a></p>
+        <p><a href="phenomena.html">Phenomena</a></p>
+        
+        <p><a href="thoughts.html">Assorted</a></p>
+
+        Email me: zonexenoz@gmail.com<p></p>
+        <a href="ideas.html">e^2=emc^2=PVnRT=PVNkT</a><p></p>
+        <a href="memorizer.html">Memorizer</a><p></p>
+        <a href="miscellaneous.html">Miscellaneous</a><p></p>
+
+        <!--
+        <a href="https://teespring.com/stores/zonex">
+        <figure>
+        <img class="onoffline" src = "" name="7.png"
+        alt="Store">
+        <figcaption>Store</figcaption></a>
+        </figure><p></p>
+        !-->
+        <a href="https://github.com/Z1X1Z/TheZone.git">Get an archive of this website</a><p></p>
+        <a href="gratitude.html">Thank you!</a><p></p>
+        <a href="paperphotos.html">Paper Photos</a><p></p>
+        Be Brave and Believe The Bible!
+</h1>
+</ul>
+
+
+<script>
+
+    //this script sets all the images to online or offline depending on which you are.
+    nf = document.querySelectorAll('.onoffline');
+    for(var c = 0; c<nf.length; c++) {
+        if(window.online)nf[c].src ="https://cdn.jsdelivr.net/gh/Z1X1Z/zonex_jsdelivr/"+nf[c].name;
+        else nf[c].src =nf[c].name;
+        nf[c].onerror=function(){    var s = document.createElement("img");//document.getElementById('threeJSscript');
+            s.src = this.name;
+            this.appendChild(s);
+            }
+    }
+    /*
+nf = document.querySelectorAll('.onoffline2');
+    for(var c = 0; c<nf.length; c++)
+        if(window.online)nf[c].href =
+        //"https://zone-x.herokuapp.com/"+//this allows for a redirect, now that we have https instead of http we bypass it we don't need to do this!!
+        nf[c].name;
+        else nf[c].href =nf[c].name;
+*/
+</script>
+
+
+</body>
+</html>
